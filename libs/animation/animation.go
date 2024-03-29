@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	. "bob/libs/types"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
@@ -40,6 +41,10 @@ func (a *AnimatedImage) SetFrame(frame uint) {
 
 func (a *AnimatedImage) GetImage() *ebiten.Image {
 	return a.frames[a.current_frame]
+}
+
+func (a *AnimatedImage) GetSize() Vec2f{
+	return Vec2f{float64(a.GetImage().Bounds().Dx()), float64(a.GetImage().Bounds().Dy())}
 }
 
 func (a *AnimatedImage) SetPlaying(is_playing bool){

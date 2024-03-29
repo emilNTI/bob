@@ -23,7 +23,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 320, 240
+	return 160, 160
 }
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
 
 	pE.SetPlaying(true)
 	
-	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowSize(640, 640)
 	ebiten.SetWindowTitle("Hello, World!")
 	
 	if err := ebiten.RunGame(&game); err != nil {
