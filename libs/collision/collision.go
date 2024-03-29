@@ -1,25 +1,29 @@
-package collision
+package collisionManager
 
 import (
 	. "bob/libs/types"
-	"bob/libs/drawble"
-	// "log"
+	"image/color"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 // called when a object collides with something (id)
-type trigger_function func(id int)
+type Trigger_function func(id int)
 
 // position is top left corner
 type CollisionBox struct {
 	size     Vec2f
 	position Vec2f
-	trigger  trigger_function
-	id       int // represents type
+	trigger  Trigger_function // public right now until better way is found
+	id       int              // represents type
+	Is_on    bool
 }
 
-func (c *CollisionBox) Init(size, position Vec2f) {
+func (c *CollisionBox) Init(id int, size, position Vec2f, trigger Trigger_function) {
+	c.id = id
 	c.size = size
 	c.position = position
+	c.trigger = trigger
 }
 
 func (c1 *CollisionBox) IsColliding(c2 *CollisionBox) bool {
@@ -31,6 +35,24 @@ func (c1 *CollisionBox) IsColliding(c2 *CollisionBox) bool {
 		return true
 	}
 	return false
+}
+
+func (c *CollisionBox) SetPosition(new_pos Vec2f) {
+	c.position = new_pos
+}
+
+func (c *CollisionBox) SetSize(new_size Vec2f) {
+	c.size = new_size
+}
+
+// only for debug
+func (c *CollisionBox) Draw(img *ebiten.Image) {
+	t := ebiten.NewImage(int(c.size.X), int(c.size.Y))
+	t.Fill(color.RGBA{255, 0, 0, 255})
+	opt := ebiten.DrawImageOptions{}
+	opt.GeoM.Translate(c.position.X, c.position.Y)
+
+	img.DrawImage(t, &opt)
 }
 
 func ListCollision(list []CollisionBox) {

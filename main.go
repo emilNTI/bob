@@ -1,7 +1,8 @@
 package main
 
 import (
-	entityManager "bob/libs"
+	cm "bob/libs/collision"
+	em "bob/libs/entity"
 	am "bob/libs/animation"
 	. "bob/libs/types"
 	"log"
@@ -10,16 +11,18 @@ import (
 )
 
 type Game struct{
-	player entityManager.Entity
+	entity_list []em.Entity
 }
 
 func (g *Game) Update() error {
-	g.player.Update()
+	
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.player.Draw(screen)
+	for _, o := range g.entity_list{
+		o.Draw(screen)
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -29,14 +32,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func main() {
 	game := Game{}
 
-	pE := am.AnimatedImage{}
-
-	game.player.Init(&pE, &Vec2f{100.0, 100.0}, &Vec2f{0.0, 0.0})
-
-	pE.Init("assets/player.png", 500, 16, 16)
-	go pE.PlayLoop()
-
-	pE.SetPlaying(true)
+	// create player entity
 	
 	ebiten.SetWindowSize(640, 640)
 	ebiten.SetWindowTitle("Hello, World!")

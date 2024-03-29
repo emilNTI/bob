@@ -1,7 +1,7 @@
 package entityManager
 
 import (
-	"bob/libs/collision"
+	cm "bob/libs/collision"
 	"bob/libs/drawble"
 	. "bob/libs/types"
 	//"log"
@@ -13,13 +13,18 @@ type Entity struct {
 	drawble  drawble.Drawble
 	position Vec2f
 	velocity Vec2f
-	collider collision.CollisionBox
+	collider cm.CollisionBox
 }
 
-func (e *Entity) Init(drawble drawble.Drawble, position, velocity *Vec2f) {
+func (e *Entity) Init(drawble drawble.Drawble, position, velocity *Vec2f, has_collision bool) {
 	e.drawble = drawble
 	e.position = *position
 	e.velocity = *velocity
+	e.collider.Is_on = has_collision
+}
+
+func (e *Entity) MakeCollider(id int, size, position *Vec2f, trigger cm.Trigger_function){
+	e.collider.Init(id, *size, *position, trigger)
 }
 
 func (e *Entity) Draw(surface *ebiten.Image) {
@@ -30,4 +35,5 @@ func (e *Entity) Draw(surface *ebiten.Image) {
 
 func (e *Entity) Update() {
 	e.position.AddEql(&e.velocity)
+	e.collider.SetPosition(e.position)
 }
