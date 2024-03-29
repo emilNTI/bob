@@ -4,6 +4,7 @@ import (
 	cm "bob/libs/collision"
 	em "bob/libs/entity"
 	am "bob/libs/animation"
+	im "bob/libs/image"
 	. "bob/libs/types"
 	"log"
 
@@ -62,8 +63,17 @@ func main() {
 	game.entity_list = append(game.entity_list, &player)
 
 	// create enemy entity
-	
-	
+	enemy := em.Entity{}
+	enemy_sprite := im.Image{}
+	enemy_sprite.Init("assets/enemy.png", 16, 16)
+	enemy.Init(&enemy_sprite, &Vec2f{80, 80}, &Vec2f{0, 0}, true)
+	enemy.MakeCollider(1, Vec2f{16, 16}, Vec2f{80, 80},
+		func(id int) {
+			log.Printf("Enemy collision with %v\n", id)
+		},
+	)
+
+	game.entity_list = append(game.entity_list, &enemy)
 	
 	ebiten.SetWindowSize(640, 640)
 	ebiten.SetWindowTitle("Hello, World!")
