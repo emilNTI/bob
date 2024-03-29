@@ -55,13 +55,23 @@ func (c *CollisionBox) Draw(img *ebiten.Image) {
 	img.DrawImage(t, &opt)
 }
 
-func ListCollision(list []CollisionBox) {
+// skip used to skip index in list
+func (c *CollisionBox) CheckWithList(list []CollisionBox, skip int){
+	for i, b := range list{
+		if i == skip{continue}
+		if c.IsColliding(&b){
+			c.trigger(b.id)
+		}
+	}
+}
+
+func ListCollision(list []*CollisionBox) {
 	for i1, b1 := range list {
 		for i2, b2 := range list {
 			if i2 == i1 {
 				continue
 			}
-			if b1.IsColliding(&b2) {
+			if b1.IsColliding(b2) {
 				b1.trigger(b2.id)
 			}
 		}

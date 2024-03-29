@@ -14,6 +14,9 @@ type Entity struct {
 	position Vec2f
 	velocity Vec2f
 	collider cm.CollisionBox
+
+	flip_x bool
+	flip_y bool
 }
 
 func (e *Entity) Init(drawble drawble.Drawble, position, velocity *Vec2f, has_collision bool) {
@@ -23,14 +26,27 @@ func (e *Entity) Init(drawble drawble.Drawble, position, velocity *Vec2f, has_co
 	e.collider.Is_on = has_collision
 }
 
-func (e *Entity) MakeCollider(id int, size, position *Vec2f, trigger cm.Trigger_function){
-	e.collider.Init(id, *size, *position, trigger)
+func (e *Entity) MakeCollider(id int, size, position Vec2f, trigger cm.Trigger_function) {
+	e.collider.Init(id, size, position, trigger)
+}
+
+func (e *Entity) GetCollider() *cm.CollisionBox {
+	return &e.collider
 }
 
 func (e *Entity) Draw(surface *ebiten.Image) {
 	opt := &ebiten.DrawImageOptions{}
+	// flip x & y
+	if e.flip_x{
+		opt.GeoM.Scale(-1, 1)
+	}
+	
 	opt.GeoM.Translate(e.position.X, e.position.Y)
 	surface.DrawImage(e.drawble.GetImage(), opt)
+}
+
+func (e *Entity) FlipX(should_flip bool){
+	e.flip_x = should_flip
 }
 
 func (e *Entity) Update() {
