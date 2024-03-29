@@ -54,7 +54,7 @@ func main() {
 
 	player.MakeCollider(0, Vec2f{16, 16}, Vec2f{100, 100},
 		func(id int) {
-			log.Printf("Player collision with %v\n", id)
+			
 		},
 	)
 
@@ -69,7 +69,7 @@ func main() {
 	enemy.Init(&enemy_sprite, &Vec2f{80, 80}, &Vec2f{0, 0}, true)
 	enemy.MakeCollider(1, Vec2f{16, 16}, Vec2f{80, 80},
 		func(id int) {
-			log.Printf("Enemy collision with %v\n", id)
+			
 		},
 	)
 
