@@ -4,6 +4,7 @@ import (
 	am "bob/libs/animation"
 	cm "bob/libs/collision"
 	em "bob/libs/entity"
+	"bob/libs/image"
 	"math"
 
 	// im "bob/libs/image"
@@ -15,8 +16,9 @@ import (
 )
 
 type Game struct {
-	entity_list []*em.Entity
-	player      em.Entity
+	entity_list    []*em.Entity
+	player         em.Entity
+	shoot_cooldown int
 }
 
 func (g *Game) Update() error {
@@ -41,14 +43,21 @@ func (g *Game) Update() error {
 		}
 	}
 
+	if ebiten.IsKeyPressed(ebiten.KeySpace) && g.shoot_cooldown <= 0{
+		g.shoot_cooldown = 60
+		createBullet(g)
+	}
+
+	for _, e := range g.entity_list {
+		e.Update()
+	}
 	// mouse
 	mx, _ := ebiten.CursorPosition()
-	if mx > int(g.player.GetPosition().X + g.player.GetSize().X/2) {
+	if mx > int(g.player.GetPosition().X+g.player.GetSize().X/2) {
 		g.player.FlipX(false)
 	} else {
 		g.player.FlipX(true)
 	}
-
 	// break player
 
 	if math.Abs(g.player.GetVelocity().X) < 0.1 {
@@ -72,8 +81,8 @@ func (g *Game) Update() error {
 		g.player.AddVelocity(Vec2f{0, 0.1})
 	}
 
-	for _, e := range g.entity_list {
-		e.Update()
+	if g.shoot_cooldown > 0 {
+		g.shoot_cooldown--
 	}
 
 	return nil
@@ -99,7 +108,26 @@ func collisionFromEntity(eSlice []*em.Entity) []*cm.CollisionBox {
 	return t
 }
 
-func createBullet(){}
+func createBullet(g *Game) {
+	mx, my := ebiten.CursorPosition()
+	angle := math.Atan2(float64(my)-g.player.GetPosition().Y, float64(mx)-g.player.GetPosition().X)
+	bs := image.Image{}
+	bs.Init("assets/bullet.png", 16, 16)
+	entity := em.Entity{}
+	entity.Init(&bs, g.player.GetPosition(), Vec2f{5 * math.Cos(angle), 5 * math.Sin(angle)}, true)
+
+	entity.SetRotation(angle)
+
+	entity.MakeCollider(2, Vec2f{16, 16}, g.player.GetPosition(),
+		func(id int) {
+			if id == 1 {
+				log.Printf("Killed enemy!\n")
+			}
+		},
+	)
+
+	g.entity_list = append(g.entity_list, &entity)
+}
 
 func main() {
 	game := Game{}
@@ -111,7 +139,7 @@ func main() {
 	go player_sprite.PlayLoop()
 	player_sprite.SetPlaying(true)
 
-	game.player.Init(&player_sprite, &Vec2f{100.0, 100.0}, &Vec2f{0, 0}, true)
+	game.player.Init(&player_sprite, Vec2f{100.0, 100.0}, Vec2f{0, 0}, true)
 
 	game.player.MakeCollider(0, Vec2f{16, 16}, Vec2f{100, 100},
 		func(id int) {
@@ -127,10 +155,13 @@ func main() {
 	enemy_sprite.Init("assets/enemy.png", 500, 16, 16)
 	go enemy_sprite.PlayLoop()
 	enemy_sprite.SetPlaying(true)
-	enemy.Init(&enemy_sprite, &Vec2f{80, 80}, &Vec2f{0, 0}, true)
+	enemy.Init(&enemy_sprite, Vec2f{80, 80}, Vec2f{0, 0}, true)
 	enemy.MakeCollider(1, Vec2f{16, 16}, Vec2f{80, 80},
 		func(id int) {
+			if id == 2 {
+				// bullet
 
+			}
 		},
 	)
 

@@ -16,18 +16,22 @@ type Entity struct {
 	collider cm.CollisionBox
 
 	flip_x bool
-	flip_y bool
+	rotation float64
 }
 
-func (e *Entity) Init(drawble drawble.Drawble, position, velocity *Vec2f, has_collision bool) {
+func (e *Entity) Init(drawble drawble.Drawble, position, velocity Vec2f, has_collision bool) {
 	e.drawble = drawble
-	e.position = *position
-	e.velocity = *velocity
+	e.position = position
+	e.velocity = velocity
 	e.collider.Is_on = has_collision
 }
 
 func (e *Entity) MakeCollider(id int, size, position Vec2f, trigger cm.Trigger_function) {
 	e.collider.Init(id, size, position, trigger)
+}
+
+func (e *Entity) SetRotation(new_rot float64){
+	e.rotation = new_rot
 }
 
 func (e *Entity) GetCollider() *cm.CollisionBox {
@@ -41,6 +45,10 @@ func (e *Entity) Draw(surface *ebiten.Image) {
 		opt.GeoM.Scale(-1, 1)
 		opt.GeoM.Translate(e.drawble.GetSize().X, 0)
 	}
+	// opt.GeoM.Translate(e.position.X, e.position.Y)
+
+	opt.GeoM.Translate(-float64(e.drawble.GetSize().X/2), -float64(e.drawble.GetSize().Y/2))
+	opt.GeoM.Rotate(e.rotation)
 	opt.GeoM.Translate(e.position.X, e.position.Y)
 	surface.DrawImage(e.drawble.GetImage(), opt)
 }
