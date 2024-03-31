@@ -5,12 +5,14 @@ import (
 	"bob/game/player"
 	am "bob/libs/animation"
 	cm "bob/libs/collision"
+	"fmt"
 
 	. "bob/libs/types"
 	"image/color"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 type Game struct {
@@ -30,6 +32,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, o := range g.entity_list {
 		(o).Draw(screen)
 	}
+	fps := fmt.Sprintf("FPS: %v", ebiten.ActualFPS())
+	ebitenutil.DebugPrint(screen, fps)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
