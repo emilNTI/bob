@@ -26,6 +26,12 @@ func (c *CollisionBox) Init(id int, size, position Vec2f, trigger Trigger_functi
 	c.trigger = trigger
 }
 
+func CreateCB(id int, size, position Vec2f, trigger Trigger_function) CollisionBox {
+	c := CollisionBox{}
+	c.Init(id, size, position, trigger)
+	return c
+}
+
 func (c1 *CollisionBox) IsColliding(c2 *CollisionBox) bool {
 	// AABB collision
 	if c1.position.X < c2.position.X+c2.size.X &&
@@ -46,9 +52,9 @@ func (c *CollisionBox) SetSize(new_size Vec2f) {
 }
 
 // only for debug
-func (c *CollisionBox) Draw(img *ebiten.Image) {
+func (c *CollisionBox) Draw(img *ebiten.Image, col color.RGBA) {
 	t := ebiten.NewImage(int(c.size.X), int(c.size.Y))
-	t.Fill(color.RGBA{255, 0, 0, 255})
+	t.Fill(col)
 	opt := ebiten.DrawImageOptions{}
 	opt.GeoM.Translate(c.position.X, c.position.Y)
 

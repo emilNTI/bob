@@ -35,6 +35,13 @@ func (a *AnimatedImage) Init(path string, playing_speed uint, width uint, height
 	}
 }
 
+func CreateAI(path string, playing_speed, with, height uint) *AnimatedImage {
+	a := AnimatedImage{}
+	a.Init(path, playing_speed, with, height)
+	go a.PlayLoop()
+	return &a
+}
+
 func (a *AnimatedImage) SetFrame(frame uint) {
 	a.current_frame = frame
 }

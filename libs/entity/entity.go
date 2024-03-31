@@ -1,7 +1,7 @@
 package entityManager
 
 import (
-	cm "bob/libs/collision"
+	// cm "bob/libs/collision"
 	"bob/libs/drawble"
 	. "bob/libs/types"
 	//"log"
@@ -13,30 +13,30 @@ type Entity struct {
 	drawble  drawble.Drawble
 	position Vec2f
 	velocity Vec2f
-	collider cm.CollisionBox
+	//collider cm.CollisionBox
 
 	flip_x bool
 	rotation float64
 }
 
-func (e *Entity) Init(drawble drawble.Drawble, position, velocity Vec2f, has_collision bool) {
+func (e *Entity) Init(drawble drawble.Drawble, position, velocity Vec2f, /*has_collision bool*/) {
 	e.drawble = drawble
 	e.position = position
 	e.velocity = velocity
-	e.collider.Is_on = has_collision
+	//e.collider.Is_on = has_collision
 }
 
-func (e *Entity) MakeCollider(id int, size, position Vec2f, trigger cm.Trigger_function) {
-	e.collider.Init(id, size, position, trigger)
-}
+//func (e *Entity) MakeCollider(id int, size, position Vec2f, trigger cm.Trigger_function) {
+//	e.collider.Init(id, size, position, trigger)
+//}
 
 func (e *Entity) SetRotation(new_rot float64){
 	e.rotation = new_rot
 }
 
-func (e *Entity) GetCollider() *cm.CollisionBox {
-	return &e.collider
-}
+//func (e *Entity) GetCollider() *cm.CollisionBox {
+//	return &e.collider
+//}
 
 func (e *Entity) Draw(surface *ebiten.Image) {
 	opt := &ebiten.DrawImageOptions{}
@@ -59,7 +59,7 @@ func (e *Entity) FlipX(should_flip bool) {
 
 func (e *Entity) Update() {
 	e.position.AddEql(&e.velocity)
-	e.collider.SetPosition(e.position)
+	// e.collider.SetPosition(e.position)
 }
 
 func (e *Entity) SetVelocity(vel Vec2f) {
