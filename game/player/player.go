@@ -129,3 +129,7 @@ func (p *Player) GetCenter() Vec2f{
 		p.position.Y + p.drawble.GetSize().Y / 2,
 	}
 }
+
+func (p *Player) GetHitBox() *cm.CollisionBox {
+	return &p.sec_collider
+}

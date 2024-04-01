@@ -20,3 +20,5 @@ type TileManager struct{
 	game_map []int // array of ints representing tiles
 	map_size Vec2i
 }
+
+func CreateTileManager(map_size Vec2i, draw_on *ebiten.Image) TileManager
